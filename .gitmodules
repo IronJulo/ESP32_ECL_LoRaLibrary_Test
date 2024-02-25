@@ -1,0 +1,3 @@
+[submodule "ESP_src/lib"]
+	path = ESP_src/lib
+	url = git@github.com:IronJulo/Lib-LoRa.git
