@@ -31,7 +31,6 @@ public:
 																					   m_rst(rst),
 																					   m_dio(rst)
 	{
-		m_spi.begin(m_sck, m_miso, m_mosi, m_ss);
 	}
 
 	~ESP_32_SPI()
@@ -71,6 +70,7 @@ public:
 
 	void begin() override
 	{
+		m_spi.begin(m_sck, m_miso, m_mosi, m_ss);
 	}
 
 	ecl::Transaction startTransaction() override
