@@ -75,7 +75,9 @@ public:
 
 	ecl::Transaction startTransaction() override
 	{
-		return ecl::Transaction(static_cast<ecl::Transaction>(*this));
+		// How can this not causes compile errors ?????
+		// return ecl::Transaction(static_cast<ecl::Transaction>(*this));
+		return ecl::Transaction(*this);
 	}
 };
 
@@ -150,7 +152,7 @@ public:
 		case ecl::Gpio::InterruptEdge::OnHighWe:
 			mode = ONHIGH_WE;
 			break;
-		default:
+		default: // TODO Throw
 			break;
 		}
 
@@ -158,7 +160,7 @@ public:
 	};
 };
 
-SPIClass spiClass;
+SPIClass spiClass(0);
 
 ESP_32_SPI espSpi(spiClass, 7, 6, 2, 3, 0, 1);
 
@@ -167,10 +169,33 @@ ESP_32_GPIO dio0Gpio(1);
 
 LoRaDevice loraDevice(espSpi, resetGpio, dio0Gpio);
 
+const double frequency = 433E6;
+
 void setup()
 {
+	Serial.begin(9600);
+	while (!Serial) ;
+
+		
+	Serial.println("-----------------------------------------------------------------");
+	Serial.flush();
+	delay(1000);
+	Serial.println("");
+	Serial.println("test");
+
+	LoRaError error = loraDevice.init(frequency);
+
+	if (LoRaError::OK != error)
+	{
+		Serial.println("Lora init failed");
+		Serial.println(error);
+		while (true)
+			;
+	}
 }
 
 void loop()
 {
+	Serial.println("Waiting");
+	delay(100);
 }
