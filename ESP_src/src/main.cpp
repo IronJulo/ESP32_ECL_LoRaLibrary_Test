@@ -45,7 +45,7 @@ public:
 		return m_locked;
 	}
 
-	bool unLock() override
+	bool unlock() override
 	{
 		digitalWrite(m_ss, HIGH);
 		m_spi.endTransaction();
@@ -70,6 +70,7 @@ public:
 
 	void begin() override
 	{
+		// Calling multiple time begin should be OK TODO: researsh on this
 		m_spi.begin(m_sck, m_miso, m_mosi, m_ss);
 	}
 
@@ -161,12 +162,9 @@ public:
 };
 
 SPIClass spiClass(0);
-
 ESP_32_SPI espSpi(spiClass, 7, 6, 2, 3, 0, 1);
-
 ESP_32_GPIO resetGpio(0);
 ESP_32_GPIO dio0Gpio(1);
-
 LoRaDevice loraDevice(espSpi, resetGpio, dio0Gpio);
 
 const double frequency = 433E6;
@@ -175,7 +173,6 @@ void setup()
 {
 	Serial.begin(9600);
 	while (!Serial) ;
-
 		
 	Serial.println("-----------------------------------------------------------------");
 	Serial.flush();
@@ -185,10 +182,10 @@ void setup()
 
 	LoRaError error = loraDevice.init(frequency);
 
-	if (LoRaError::OK != error)
+	if (error.is(LoRaError::OK))
 	{
 		Serial.println("Lora init failed");
-		Serial.println(error);
+		Serial.println(error.toString().c_str());
 		while (true)
 			;
 	}
