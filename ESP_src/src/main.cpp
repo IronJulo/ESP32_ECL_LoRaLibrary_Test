@@ -172,8 +172,9 @@ const double frequency = 433E6;
 void setup()
 {
 	Serial.begin(9600);
-	while (!Serial) ;
-		
+	while (!Serial)
+		;
+
 	Serial.println("-----------------------------------------------------------------");
 	Serial.flush();
 	delay(1000);
@@ -182,7 +183,7 @@ void setup()
 
 	LoRaError error = loraDevice.init(frequency);
 
-	if (error.is(LoRaError::OK))
+	if (error.isNot(LoRaError::OK))
 	{
 		Serial.println("Lora init failed");
 		Serial.println(error.toString().c_str());
